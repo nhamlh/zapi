@@ -69,4 +69,14 @@ api.add_resource(File, '/<string:file_name>')
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    ENV = os.environ.get("RUNNING_ENV", "DEVELOPMENT")
+    LISTEN_HOST = os.environ.get("LISTEN_HOST", "localhost")
+    LISTEN_PORT = int(os.environ.get("LISTEN_PORT", "5000"))
+
+    if ENV == "DEVELOPMENT":
+        debug = True
+    else:
+        debug = False
+
+    app.run(debug=debug, host=LISTEN_HOST, port=LISTEN_PORT)
+
