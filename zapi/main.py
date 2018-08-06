@@ -1,6 +1,7 @@
 
 import os
-from flask import Flask, request
+import mimetypes
+from flask import Flask, request, send_file
 from flask_restful import Resource, Api
 
 
@@ -18,16 +19,29 @@ class File(Resource):
 
     def get(self, file_name):
         files = self._get_file_list()
-        return {'code': 200} if file_name in files else {'code': 404}
+
+        if file_name in files:
+            mime = mimetypes.guess_type(file_name)[0]
+            if not mime:
+                mime = "application/octet-stream"
+            return send_file(os.path.join(FILESTORE_PATH, file_name), mimetype=mime)
+
+        return {'code': 404}
 
     def post(self, file_name):
+        """
+        Add a file to file store. We only support uploading files directly to the file store.
+        This mean that we can't upload file to nested folders.
+        """
         files = self._get_file_list()
+
         if file_name in files:
             return {'code': 400, 'msg': f'File {file_name} exists'}
 
         if 'file' not in request.files:
             return {'code': 400, 'msg': 'Request does not contain file content'}
 
+        # FIXME: Be capable of upload file to nested folders
         file = request.files['file']
         file.save(os.path.join(FILESTORE_PATH, file_name))
 
