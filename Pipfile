@@ -1,3 +1,4 @@
 [packages]
-flask = "*"
-flask-restful = "*"
+
+Flask = "*"
+Flask-RESTful = "*"
