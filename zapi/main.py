@@ -69,6 +69,7 @@ api.add_resource(File, '/<string:file_name>')
 
 
 if __name__ == '__main__':
+    # TODO: Use click to better manage parameters
     ENV = os.environ.get("RUNNING_ENV", "DEVELOPMENT")
     LISTEN_HOST = os.environ.get("LISTEN_HOST", "localhost")
     LISTEN_PORT = int(os.environ.get("LISTEN_PORT", "5000"))
